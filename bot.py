@@ -25,8 +25,7 @@ async def react(ctx: discord.ApplicationContext, emotion: str, username: discord
 
     # Устанавливаем эмоцию для пользователя
     emotions[user.name] = emotion
-    await ctx.send(f'Установлена эмоция "{emotion}" для пользователя {user.mention}.')
-
+    await ctx.respond(f'Установлена эмоция "{emotion}" для пользователя {user.mention}.')
 
 @bot.event
 async def on_message(message):
