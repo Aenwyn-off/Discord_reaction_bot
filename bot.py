@@ -27,6 +27,7 @@ async def react(ctx: discord.ApplicationContext, emotion: str, username: discord
     emotions[user.name] = emotion
     await ctx.respond(f'Установлена эмоция "{emotion}" для пользователя {user.mention}.')
 
+
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
