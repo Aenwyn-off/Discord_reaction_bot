@@ -2,6 +2,8 @@ import discord
 
 from os import getenv
 from dotenv import load_dotenv
+from database import orm
+
 
 load_dotenv()
 token = getenv("BOT_TOKEN")
@@ -22,6 +24,9 @@ async def react(ctx: discord.ApplicationContext, emotion: str, username: discord
     if user is None:
         await ctx.send(f'Пользователь с именем "{username}" не найден.')
         return
+
+    orm.add_user(username.id, username.name)
+    orm.add_emoji(username.id, emotion)
 
     # Устанавливаем эмоцию для пользователя
     emotions[user.name] = emotion
