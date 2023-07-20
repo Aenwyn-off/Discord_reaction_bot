@@ -5,10 +5,11 @@ from .models import Base, User, Emoji
 from os import getenv
 from dotenv import load_dotenv
 
+load_dotenv()
 engine = create_engine('postgresql://postgres:postgres@localhost:5432/postgres', echo=True)
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
-load_dotenv()
+
 
 
 def add_user(dis_id, dis_name):
@@ -20,6 +21,12 @@ def add_user(dis_id, dis_name):
         session.commit()
 
 
+def get_user(dis_id):
+    session = Session()
+    user = session.query(User).filter(User.dis_id == dis_id).first()
+    return user
+
+
 def add_emoji(dis_id, emoji):
     session = Session()
     user = session.query(User).filter(User.dis_id == dis_id).first()
@@ -28,11 +35,11 @@ def add_emoji(dis_id, emoji):
     session.commit()
 
 
-# def get_emoji(dis_id):
-#     session = Session()
-#     user = session.query(User).filter(User.dis_id == dis_id).all
-#     emoji = user.emoji
-#     return emoji
+def get_emojis(dis_id):
+    session = Session()
+    user = session.query(User).filter(User.dis_id == dis_id).first()
+    emojis = user.emote
+    return emojis
 #
 #
 # def delete_user_emoji(emoji):

@@ -12,7 +12,7 @@ class User(Base):
     connection_date = Column(DateTime, default=datetime.now, nullable=False)
     dis_id = Column(BigInteger, nullable=False)
     dis_name = Column(String, nullable=False)
-    emojik = relationship('Emoji', backref='emojik', lazy=True, cascade='all, delete-orphan')
+    emote = relationship('Emoji', backref='emote', lazy=True, cascade='all, delete-orphan')
 
     def __repr__(self):
         return self.dis_id

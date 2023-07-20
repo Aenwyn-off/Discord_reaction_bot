@@ -4,7 +4,6 @@ from os import getenv
 from dotenv import load_dotenv
 from database import orm
 
-
 load_dotenv()
 token = getenv("BOT_TOKEN")
 bot = discord.Bot()
@@ -25,12 +24,25 @@ async def react(ctx: discord.ApplicationContext, emotion: str, username: discord
         await ctx.send(f'Пользователь с именем "{username}" не найден.')
         return
 
-    orm.add_user(username.id, username.name)
-    orm.add_emoji(username.id, emotion)
+    # Добавляем пользователя и эмоцию в БД
+    if username.id == orm.get_user(username.id).id:
+        orm.add_user(username.id, username.name)
 
-    # Устанавливаем эмоцию для пользователя
-    emotions[user.name] = emotion
-    await ctx.respond(f'Установлена эмоция "{emotion}" для пользователя {user.mention}.')
+    async def emote_validator(lst, value):
+        counter = 0
+        if not lst:
+            orm.add_emoji(username.id, emotion)
+        else:
+            for val in lst:
+                if str(val) == value:
+                    counter += 1
+            if counter != 1:
+                orm.add_emoji(username.id, emotion)
+                await ctx.respond(f'Установлена эмоция "{emotion}" для пользователя {user.mention}.')
+            else:
+                await ctx.respond(f'Эмоция "{emotion}" уже установлена')
+
+    await emote_validator(orm.get_emojis(username.id), emotion)
 
 
 @bot.event
@@ -39,10 +51,11 @@ async def on_message(message):
         return
 
     # Проверяем, есть ли у пользователя установленная эмоция
-    if message.author.name in emotions:
-        emotion = emotions[message.author.name]
+    if message.author.id == orm.get_user(message.author.id).dis_id:
+        for emote in orm.get_emojis(message.author.id):
+            await message.add_reaction(str(emote))
         # Добавляем эмоцию к сообщению пользователя
-        await message.add_reaction(emotion)
     await bot.process_application_commands(message)
+
 
 bot.run(token)
