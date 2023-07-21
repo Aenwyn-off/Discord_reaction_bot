@@ -24,9 +24,8 @@ async def react(ctx: discord.ApplicationContext, emotion: str, username: discord
         await ctx.send(f'Пользователь с именем "{username}" не найден.')
         return
 
-    # Добавляем пользователя и эмоцию в БД
-    if username.id == orm.get_user(username.id).id:
-        orm.add_user(username.id, username.name)
+    # Добавляем пользователя в БД
+    orm.add_user(username.id, username.name)
 
     async def emote_validator(lst, value):
         counter = 0
@@ -56,6 +55,35 @@ async def on_message(message):
             await message.add_reaction(str(emote))
         # Добавляем эмоцию к сообщению пользователя
     await bot.process_application_commands(message)
+
+
+@bot.slash_command(name="delemote", description="delete emoji from user")
+async def delemote(ctx: discord.ApplicationContext, emotion: str, username: discord.User):
+    # Ищем пользователя по имени
+    user = discord.utils.get(ctx.guild.members, name=username.name)
+    if user is None:
+        await ctx.send(f'Пользователь с именем "{username}" не найден.')
+        return
+
+    # if username.id == orm.get_user(username.id).dis_id:
+    #     orm.add_user(username.id, username.name)
+
+    async def emote_validator(lst, value):
+        counter = 0
+        if not lst:
+            await ctx.respond(f"Нечего удалять")
+        else:
+            for val in lst:
+                if str(val) == value:
+                    counter += 1
+                    break
+            if counter == 1:
+                orm.delete_user_emoji(emotion)
+                await ctx.respond(f'Эмоция "{emotion}" для пользователя {user.mention} удалена')
+            else:
+                await ctx.respond(f'Эмоция - "{emotion}" не установлена пользователю')
+
+    await emote_validator(orm.get_emojis(username.id), emotion)
 
 
 bot.run(token)

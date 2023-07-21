@@ -40,15 +40,16 @@ def get_emojis(dis_id):
     user = session.query(User).filter(User.dis_id == dis_id).first()
     emojis = user.emote
     return emojis
-#
-#
-# def delete_user_emoji(emoji):
-#     session = Session()
-#     emojis = session.get(Emoji, emoji)
-#     session.delete(emojis)
-#     session.commit()
-#
-#
+
+
+def delete_user_emoji(emoji):
+    session = Session()
+    emo = session.query(Emoji).filter(Emoji.emoji == emoji).first().id
+    emojis = session.get(Emoji, emo)
+    session.delete(emojis)
+    session.commit()
+
+
 # def delete_all_emoji_from_user():
 #     session = Session()
 #     users = session.query(User).all()
