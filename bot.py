@@ -8,8 +8,6 @@ load_dotenv()
 token = getenv("BOT_TOKEN")
 bot = discord.Bot()
 
-emotions = {}
-
 
 @bot.event
 async def on_ready():
@@ -21,7 +19,7 @@ async def react(ctx: discord.ApplicationContext, emotion: str, username: discord
     # Ищем пользователя по имени
     user = discord.utils.get(ctx.guild.members, name=username.name)
     if user is None:
-        await ctx.respond(f'Пользователь с именем "{username}" не найден.')
+        await ctx.respond(f'Пользователь с именем "{username.mention}" не найден.')
         return
 
     # Добавляем пользователя в БД
@@ -31,6 +29,7 @@ async def react(ctx: discord.ApplicationContext, emotion: str, username: discord
         counter = 0
         if not lst:
             orm.add_emoji(username.id, emotion)
+            await ctx.respond(f'Установлена эмоция "{emotion}" для пользователя {user.mention}.')
         else:
             for val in lst:
                 if str(val) == value:
@@ -62,7 +61,7 @@ async def unreact(ctx: discord.ApplicationContext, emotion: str, username: disco
     # Ищем пользователя по имени
     user = discord.utils.get(ctx.guild.members, name=username.name)
     if user is None:
-        await ctx.respond(f'Пользователь с именем "{username}" не найден.')
+        await ctx.respond(f'Пользователь с именем "{username.mention}" не найден.')
         return
 
     # if username.id == orm.get_user(username.id).dis_id:
@@ -91,12 +90,11 @@ async def unreactall(ctx: discord.ApplicationContext, username: discord.User):
     # Ищем пользователя по имени
     user = discord.utils.get(ctx.guild.members, name=username.name)
     if user is None:
-        await ctx.respond(f'Пользователь с именем "{username}" не найден.')
+        await ctx.respond(f'Пользователь с именем "{username.mention}" не найден.')
         return
 
     orm.delete_all_emoji_from_user(username.id)
-    await ctx.respond(f'Все эмоции с пользователя {username} - удалены')
-
+    await ctx.respond(f'Все эмоции с пользователя {username.mention} - удалены')
 
 
 bot.run(token)

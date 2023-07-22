@@ -6,10 +6,9 @@ from os import getenv
 from dotenv import load_dotenv
 
 load_dotenv()
-engine = create_engine('postgresql://postgres:postgres@localhost:5432/postgres', echo=True)
+engine = create_engine(getenv("URL"), echo=True)
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
-
 
 
 def add_user(dis_id, dis_name):
