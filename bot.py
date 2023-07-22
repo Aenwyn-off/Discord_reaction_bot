@@ -48,6 +48,9 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
+    if orm.get_user(message.author.id) is None:
+        return
+
     # Проверяем, есть ли у пользователя установленная эмоция
     if message.author.id == orm.get_user(message.author.id).dis_id:
         for emote in orm.get_emojis(message.author.id):

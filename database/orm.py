@@ -1,9 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from .models import Base, User, Emoji
-
 from os import getenv
 from dotenv import load_dotenv
+
+from .models import Base, User, Emoji
 
 load_dotenv()
 engine = create_engine(getenv("URL"), echo=True)
@@ -52,7 +52,8 @@ def delete_user_emoji(emoji):
 def delete_all_emoji_from_user(dis_id):
     session = Session()
     user = session.query(User).filter(User.dis_id == dis_id).first()
-    emotions = user.emote
-    for emote in emotions:
-        session.delete(emote)
+    session.delete(user)
+    # emotions = user.emote
+    # for emote in emotions:
+    #     session.delete(emote)
     session.commit()

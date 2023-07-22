@@ -27,10 +27,3 @@ class Emoji(Base):
 
     def __repr__(self):
         return self.emoji
-
-
-engine = create_engine('postgresql://postgres:postgres@localhost:5432/postgres', echo=True)
-Base.metadata.create_all(engine)
-
-Session = sessionmaker(bind=engine)
-session = Session()
