@@ -21,7 +21,7 @@ async def react(ctx: discord.ApplicationContext, emotion: str, username: discord
     # Ищем пользователя по имени
     user = discord.utils.get(ctx.guild.members, name=username.name)
     if user is None:
-        await ctx.send(f'Пользователь с именем "{username}" не найден.')
+        await ctx.respond(f'Пользователь с именем "{username}" не найден.')
         return
 
     # Добавляем пользователя в БД
@@ -57,12 +57,12 @@ async def on_message(message):
     await bot.process_application_commands(message)
 
 
-@bot.slash_command(name="delemote", description="delete emoji from user")
-async def delemote(ctx: discord.ApplicationContext, emotion: str, username: discord.User):
+@bot.slash_command(name="unreact", description="delete emoji from user")
+async def unreact(ctx: discord.ApplicationContext, emotion: str, username: discord.User):
     # Ищем пользователя по имени
     user = discord.utils.get(ctx.guild.members, name=username.name)
     if user is None:
-        await ctx.send(f'Пользователь с именем "{username}" не найден.')
+        await ctx.respond(f'Пользователь с именем "{username}" не найден.')
         return
 
     # if username.id == orm.get_user(username.id).dis_id:
@@ -84,6 +84,19 @@ async def delemote(ctx: discord.ApplicationContext, emotion: str, username: disc
                 await ctx.respond(f'Эмоция - "{emotion}" не установлена пользователю')
 
     await emote_validator(orm.get_emojis(username.id), emotion)
+
+
+@bot.slash_command(name="unreactall", description="delete all emojis from user")
+async def unreactall(ctx: discord.ApplicationContext, username: discord.User):
+    # Ищем пользователя по имени
+    user = discord.utils.get(ctx.guild.members, name=username.name)
+    if user is None:
+        await ctx.respond(f'Пользователь с именем "{username}" не найден.')
+        return
+
+    orm.delete_all_emoji_from_user(username.id)
+    await ctx.respond(f'Все эмоции с пользователя {username} - удалены')
+
 
 
 bot.run(token)

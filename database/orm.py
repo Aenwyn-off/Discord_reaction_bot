@@ -50,7 +50,10 @@ def delete_user_emoji(emoji):
     session.commit()
 
 
-# def delete_all_emoji_from_user():
-#     session = Session()
-#     users = session.query(User).all()
-#     return users
+def delete_all_emoji_from_user(dis_id):
+    session = Session()
+    user = session.query(User).filter(User.dis_id == dis_id).first()
+    emotions = user.emote
+    for emote in emotions:
+        session.delete(emote)
+    session.commit()
