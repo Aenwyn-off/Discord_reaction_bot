@@ -5,11 +5,11 @@ This discord bot was created as a practice to learn how to work with APIs, Docke
 It uses the Pycord library (https://docs.pycord.dev/en/stable/) 
 
 The bot implements:
-- Add emotion to a user's message;
+- Adds emotions to user messages;
 - Remove one emotion from a user;
-- Remove all emotion from the user;
+- Remove all emotion from the user.
 
-Bot link: https://discord.com/api/oauth2/authorize?client_id=1129455119143010416&permissions=8&scope=bot (Not deployed yet.)
+Bot link: [Reactions bot](https://discord.com/api/oauth2/authorize?client_id=1129455119143010416&permissions=8&scope=bot) (Not deployed yet.)
 
 #
 
